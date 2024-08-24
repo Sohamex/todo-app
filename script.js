@@ -51,8 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="flex-grow overflow-hidden text-white">
                     <p>${task.text}</p>
                 </div>
-                <button class="text-white bg-gray-600 flex-shrink-0 ml-4 border-2 border-white rounded py-1 px-2">
-                    <img data-index="${index}" class="deleteBtn w-6 h-6" src="./assets/delete.png" alt="Delete">
+                <button class="deleteBtn text-white bg-gray-600 flex-shrink-0 ml-4 border-2 border-white rounded py-1 px-2">
+                    <img data-index="${index}" class="w-6 h-6" src="./assets/delete.png" alt="Delete">
                 </button>
             `;
 
