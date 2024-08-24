@@ -5,17 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskInput = document.getElementById('taskInput');
     const prioritySelector = document.getElementById('prioritySelector');
 
-    // Retrieve tasks from localStorage or initialize as an empty array
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let selectedPriority = 'low'; // Default priority
 
-    // Save tasks to localStorage and re-render the task lists
     function saveTasks() {
         localStorage.setItem('tasks', JSON.stringify(tasks));
         renderTasks();
     }
 
-    // Get the CSS class based on task priority
     function getPriorityClass(priority) {
         switch (priority) {
             case 'high': return 'bg-red-500';
@@ -25,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Render the task lists
     function renderTasks() {
         taskList.innerHTML = '';
         completedTaskList.innerHTML = '';
@@ -35,25 +31,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
         tasks.forEach((task, index) => {
             const taskPriorityClass = getPriorityClass(task.priority);
+            const pinnedClass = task.pinned ? 'border-l-4 border-blue-500' : '';
 
             const taskItem = document.createElement('li');
             taskItem.classList.add('p-2', 'rounded', 'flex', 'justify-between', 'items-center', 'bg-gray-600');
 
-            // Apply priority class only if the task is not completed
             if (taskPriorityClass && !task.completed) {
                 taskItem.classList.add(taskPriorityClass);
+            }
+            if (pinnedClass) {
+                taskItem.classList.add(pinnedClass);
             }
 
             taskItem.dataset.index = index;
             taskItem.innerHTML = `
-                <div class="checkbox-container">
-                    <input type="checkbox" ${task.completed ? 'checked' : ''} class="toggleCompleted cursor-pointer">
+                <div class="checkbox-container flex-shrink-0">
+                    <input type="checkbox" ${task.completed ? 'checked' : ''} class="toggleCompleted">
                 </div>
                 <div class="flex-grow overflow-hidden text-white">
                     <p>${task.text}</p>
                 </div>
-                <button data-index="${index}" class="deleteBtn bg-gray-600 flex-shrink-0 ml-4 border-2 border-white rounded p-1">
-                    <img class="w-6 h-6" src="./assets/delete.png" alt="Delete">
+                <button class="text-white bg-gray-600 flex-shrink-0 ml-4 border-2 border-white rounded py-1 px-2">
+                    <img data-index="${index}" class="deleteBtn w-6 h-6" src="./assets/delete.png" alt="Delete">
                 </button>
             `;
 
@@ -66,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Display message if there are no tasks or completed tasks
         if (!hasTasks) {
             taskList.innerHTML = '<p class="text-gray-400 text-center border border-gray-500 rounded p-3">No tasks</p>';
         }
@@ -75,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
             completedTaskList.innerHTML = '<p class="text-gray-400 text-center border border-gray-500 rounded p-3">No completed tasks</p>';
         }
 
-        // Attach event listeners for delete and toggle completion
         document.querySelectorAll('.deleteBtn').forEach(btn => {
             btn.addEventListener('click', deleteTask);
         });
@@ -85,32 +82,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Delete task by index
     function deleteTask(event) {
         const index = event.target.dataset.index;
         tasks.splice(index, 1);
         saveTasks();
     }
 
-    // Add a new task
     function addTask(event) {
         event.preventDefault();
         const taskText = taskInput.value.trim();
         if (taskText) {
-            tasks.push({ text: taskText, priority: selectedPriority, completed: false });
+            tasks.push({ text: taskText, priority: selectedPriority, completed: false, pinned: false });
             saveTasks();
-            taskInput.value = ''; // Clear the input
+            taskInput.value = '';
         }
     }
 
-    // Toggle task completion status
     function toggleTaskCompletion(event) {
         const index = event.target.closest('li').dataset.index;
         tasks[index].completed = !tasks[index].completed;
         saveTasks();
     }
 
-    // Update UI to reflect selected priority
+    prioritySelector.addEventListener('click', (event) => {
+        if (event.target.dataset.priority) {
+            selectedPriority = event.target.dataset.priority;
+            updatePriorityUI();
+        }
+    });
+
     function updatePriorityUI() {
         prioritySelector.querySelectorAll('div').forEach(div => {
             div.classList.remove('border-2', 'border-white');
@@ -121,16 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Set priority when clicking on a circle
-    prioritySelector.addEventListener('click', (event) => {
-        if (event.target.dataset.priority) {
-            selectedPriority = event.target.dataset.priority;
-            updatePriorityUI();
-        }
-    });
-
-    // Initialize the app
     todoForm.addEventListener('submit', addTask);
-    renderTasks(); // Render the task list on page load
-    updatePriorityUI(); // Initialize the priority selector UI
+    renderTasks();
+    updatePriorityUI(); // Initialize UI with the default priority
 });
