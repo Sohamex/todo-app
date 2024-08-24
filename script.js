@@ -47,12 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
             taskItem.dataset.index = index;
             taskItem.innerHTML = `
                 <div class="checkbox-container">
-                    <input type="checkbox" ${task.completed ? 'checked' : ''} class="toggleCompleted">
+                    <input type="checkbox" ${task.completed ? 'checked' : ''} class="toggleCompleted cursor-pointer">
                 </div>
                 <div class="flex-grow overflow-hidden text-white">
                     <p>${task.text}</p>
                 </div>
-                <button data-index="${index}" class="deleteBtn text-white bg-gray-600 flex-shrink-0 ml-4 border-2 border-white rounded py-1 px-2">Delete</button>
+                <button data-index="${index}" class="deleteBtn bg-gray-600 flex-shrink-0 ml-4 border-2 border-white rounded p-1">
+                    <img class="w-6 h-6" src="./assets/delete.png" alt="Delete">
+                </button>
             `;
 
             if (task.completed) {
