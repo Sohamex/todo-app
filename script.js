@@ -68,11 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Display message if there are no tasks or completed tasks
         if (!hasTasks) {
-            taskList.innerHTML = '<p class="text-gray-400 text-center border border-gray-500 rounded p-4">No tasks</p>';
+            taskList.innerHTML = '<p class="text-gray-400 text-center border border-gray-500 rounded p-3">No tasks</p>';
         }
 
         if (!hasCompletedTasks) {
-            completedTaskList.innerHTML = '<p class="text-gray-400 text-center border border-gray-500 rounded p-4">No completed tasks</p>';
+            completedTaskList.innerHTML = '<p class="text-gray-400 text-center border border-gray-500 rounded p-3">No completed tasks</p>';
         }
 
         // Attach event listeners for delete and toggle completion
